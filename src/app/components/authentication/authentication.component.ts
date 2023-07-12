@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
+import { ApiResponseLogin } from 'src/app/interfaces/ApiResponse';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
   selector: 'app-authentication',
@@ -20,7 +22,7 @@ export class AuthenticationComponent {
   isRecruiter: boolean = false;
   isRegisterMode: boolean = false;
 
-  constructor(private messageService: MessageService) { }
+  constructor(private messageService: MessageService, private authService: AuthenticationService) { }
 
   submit() {
 
@@ -28,24 +30,33 @@ export class AuthenticationComponent {
 
     if (this.isFormValid()) {
 
-      // fazer requisição
-      this.showSuccess();
-
-      /*
-
-      {
-        "name": "Lucas",
-        "email": "lucas@dev.com",
-        "password": "8896",
-        "company": "imb",
-        "phone": "71999333511",
-        "role": "RECRUITER"
-      }
-      */
+      this.authService.signIn({ email: this.email, password: this.password }).subscribe({
+        next: this.handleSuccessResponse,
+        error: this.handleErrorResponse,
+        complete: this.handleComplete
+      })
 
     } else {
       this.catchError();
     }
+  }
+
+  private handleSuccessResponse = (response: ApiResponseLogin): void => {
+    // this.isLoading = false;
+    console.log(response.token);
+    this.showSuccess();
+  };
+
+  private handleErrorResponse = (error: any): void => {
+    console.log(error);
+    // this.isLoading = false;
+  };
+
+  private handleComplete = (): void => {
+    // if (!environment.production) {
+    console.log('Requisição concluída com sucesso!');
+    alert("logado com sucesso");
+    // }
   }
 
   catchError() {
@@ -186,3 +197,15 @@ export class AuthenticationComponent {
     }
   }
 }
+
+/*
+
+{
+  "name": "Lucas",
+  "email": "lucas@dev.com",
+  "password": "8896",
+  "company": "imb",
+  "phone": "71999333511",
+  "role": "RECRUITER"
+}
+*/
