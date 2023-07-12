@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ApiLoginResponse, UserDetailsResponse } from '../interfaces/ApiResponse';
+import { ApiLoginResponse, ApiSignupResponse, UserDetailsResponse } from '../interfaces/ApiResponse';
 import { UserBodyLogin } from '../interfaces/User';
 
 @Injectable({
@@ -14,6 +14,10 @@ export class AuthenticationService {
   private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
   constructor(private http: HttpClient) { }
+
+  signUp(data: UserBodyLogin): Observable<string> {
+    return this.http.post(this.apiUrl.concat("/signup"), data, { responseType: 'text' });
+  }
 
   signIn(data: UserBodyLogin): Observable<ApiLoginResponse> {
     return this.http.post<ApiLoginResponse>(this.apiUrl.concat("/signin"), data, { headers: this.headers });
@@ -33,4 +37,9 @@ export class AuthenticationService {
   saveToken(token: string) {
     localStorage.setItem('utoken', token);
   }
+
+  clearToken() {
+    localStorage.removeItem('utoken');
+  }
+
 }

@@ -12,3 +12,8 @@ export interface ApiErrorResponse {
 export interface UserDetailsResponse {
     email: string;
 }
+
+export interface ApiSignupResponse {
+    status: number;
+    statusText: string;
+}

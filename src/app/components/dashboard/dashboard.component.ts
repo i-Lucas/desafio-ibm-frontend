@@ -33,8 +33,6 @@ export class DashboardComponent implements OnInit {
   }
 
   showError(detail: string) {
-
-    console.log(detail);
     const message = detail === undefined ?
       "Algo de errado aconteceu ! Tente novamente mais tarde" : detail;
 

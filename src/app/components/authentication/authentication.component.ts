@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ApiLoginResponse, ApiErrorResponse } from 'src/app/interfaces/ApiResponse';
@@ -10,10 +10,10 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
   styleUrls: ['./authentication.component.scss'],
 })
 
-export class AuthenticationComponent {
+export class AuthenticationComponent implements OnInit {
 
   protected name: string = "";
-  protected email: string = "";
+  protected email: string = "rafaela@dev.com";
   protected password: string = "";
   protected confirmPassword: string = "";
   protected phone: string = "";
@@ -21,23 +21,49 @@ export class AuthenticationComponent {
   protected errors: { [key: string]: string } = {};
 
   protected isRecruiter: boolean = false;
-  protected isRegisterMode: boolean = false;
+  protected isRegisterMode: boolean = true;
   protected isLoading: boolean = false;
 
   constructor(private messageService: MessageService, private authService: AuthenticationService, private router: Router) { }
+
+  ngOnInit(): void {
+    this.authService.clearToken();
+  }
 
   submit() {
 
     if (this.isFormValid()) {
 
       this.isLoading = true;
+      if (this.isRegisterMode) {
 
-      this.authService.signIn({ email: this.email, password: this.password })
-        .subscribe({
-          next: this.handleSuccessResponse,
-          error: this.handleErrorResponse,
-          complete: this.handleComplete
-        })
+        this.authService.signUp({ email: this.email, password: this.password })
+          .subscribe({
+            next: (res) => {
+              this.isLoading = false;
+              this.showSuccess(res);
+            },
+            error: (err) => {
+              this.isLoading = false;
+              const errorObject = JSON.parse(err.error);
+              const errorMessage = errorObject.message;
+              this.showError(errorMessage);
+            },
+            complete: () => {
+              this.isRegisterMode = false;
+              this.router.navigate(['/']);
+            }
+          })
+
+      } else {
+
+        this.authService.signIn({ email: this.email, password: this.password })
+          .subscribe({
+            next: this.handleSuccessResponse,
+            error: this.handleErrorResponse,
+            complete: this.handleComplete
+          })
+      }
 
     } else {
       this.catchError();
@@ -49,10 +75,9 @@ export class AuthenticationComponent {
     this.authService.saveToken(response.token);
   };
 
-  private handleErrorResponse = (error: ApiErrorResponse): void => {
+  private handleErrorResponse = ({ error }: ApiErrorResponse): void => {
     this.isLoading = false;
-    console.error(error.error.message);
-    this.showError(error.error.message);
+    this.showError(error.message);
   };
 
   private handleComplete = (): void => {
@@ -61,8 +86,9 @@ export class AuthenticationComponent {
 
   catchError() {
 
-    const allFields = ["email", "password", "name", "confirmPassword", "phone"];
-    const loginFields = allFields.slice(0, 2);
+    // const allFields = ["email", "password", "name", "confirmPassword", "phone"];
+    const allFields = ["email", "password", "confirmPassword"];
+    const loginFields = allFields.slice(0, 1);
     const currentField = this.isRegisterMode ? allFields : loginFields;
 
     for (let field of currentField) {
@@ -70,6 +96,14 @@ export class AuthenticationComponent {
         this.showError(this.errors[field]);
       }
     }
+  }
+
+  showSuccess(detail: string) {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail
+    });
   }
 
   showError(detail: string) {
@@ -122,7 +156,9 @@ export class AuthenticationComponent {
     if (!this.password || this.password.trim() === '') {
       this.errors['password'] = this.getFormTextError().password_required;
     } else if (this.password.length < 5) {
-      this.errors['password'] = this.getFormTextError().small_password;
+      if (this.isRegisterMode) {
+        this.errors['password'] = this.getFormTextError().small_password;
+      }
     }
   }
 
@@ -145,12 +181,15 @@ export class AuthenticationComponent {
   }
 
   isFormValid() {
+
     this.clearErrors();
-    if (!this.isRegisterMode) {
+    if (this.isRegisterMode) {
       this.validateEmail();
       this.validatePassword();
+      this.validateConfirmPassword();
     } else {
-      this.validateForm();
+      this.validateEmail();
+      this.validatePassword();
     }
     return Object.keys(this.errors).length === 0;
   }
@@ -189,5 +228,22 @@ export class AuthenticationComponent {
         recruter: "Sou Candidato",
       }
     }
+  }
+
+  handleSuccessResponseSignup(res: string) {
+    this.isLoading = false;
+    this.showSuccess(res);
+  }
+
+  handleErrorResponseSignup(err: any) {
+    this.isLoading = false;
+    const errorObject = JSON.parse(err.error);
+    const errorMessage = errorObject.message;
+    this.showError(errorMessage);
+  }
+
+  handleCompleteSignup() {
+    this.isRegisterMode = false;
+    this.router.navigate(['/']);
   }
 }

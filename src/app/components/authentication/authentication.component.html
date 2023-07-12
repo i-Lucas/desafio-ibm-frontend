@@ -11,13 +11,13 @@
                     getFormText().label2 }}</span>
             </div>
 
-            <div *ngIf="isRegisterMode">
+            <!-- <div *ngIf="isRegisterMode">
                 <span class="p-float-label">
                     <input pInputText id="username" [(ngModel)]="name"
                         [ngClass]="{ 'ng-invalid ng-dirty': errors['name'] }" size="23%" />
                     <label htmlFor="username">Nome</label>
                 </span>
-            </div>
+            </div> -->
 
             <span class="p-float-label">
                 <input pInputText id="email" [(ngModel)]="email" [ngClass]="{ 'ng-invalid ng-dirty': errors['email'] }"
@@ -37,13 +37,13 @@
                         [(ngModel)]="confirmPassword" [feedback]="false" [toggleMask]="true" />
                     <label htmlFor="password">Confirmar Senha</label>
                 </span>
-                <span class="flex mt-4 justify-content-start align-items-center">
+                <!-- <span class="flex mt-4 justify-content-start align-items-center">
                     <p-inputSwitch [(ngModel)]="isRecruiter" />
                     <span class="ml-3 text-600 font-medium line-height-3">Sou: {{ isRecruiter ? ' Recrutador' :
                         'Candidato'}}</span>
-                </span>
+                </span> -->
 
-                <div *ngIf="isRecruiter">
+                <!-- <div *ngIf="isRecruiter">
                     <span class="p-float-label mt-3">
                         <input pInputText id="company" [(ngModel)]="company"
                             [ngClass]="{ 'ng-invalid ng-dirty': errors['company'] }" size="23%" />
@@ -55,7 +55,7 @@
                     <input pInputText id="phone" [(ngModel)]="phone"
                         [ngClass]="{ 'ng-invalid ng-dirty': errors['phone'] }" size="23%" />
                     <label htmlFor="phone">Telefone</label>
-                </span>
+                </span> -->
             </div>
 
             <p-toast />
