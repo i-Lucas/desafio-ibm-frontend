@@ -58,8 +58,8 @@
                 </span>
             </div>
 
-            <p-toast></p-toast>
-            <p-button label="{{ getFormText().btn }}" [loading]="false" (click)="submit()" />
+            <p-toast />
+            <p-button label="{{ getFormText().btn }}" [loading]="isLoading" (click)="submit()" />
         </div>
 
     </div>

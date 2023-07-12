@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { ApiResponseLogin } from 'src/app/interfaces/ApiResponse';
+import { ApiLoginResponse, ApiErrorResponse } from 'src/app/interfaces/ApiResponse';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
@@ -11,52 +12,51 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 
 export class AuthenticationComponent {
 
-  name: string = "";
-  email: string = "";
-  password: string = "";
-  confirmPassword: string = "";
-  phone: string = "";
-  company: string = "";
-  errors: { [key: string]: string } = {};
+  protected name: string = "";
+  protected email: string = "";
+  protected password: string = "";
+  protected confirmPassword: string = "";
+  protected phone: string = "";
+  protected company: string = "";
+  protected errors: { [key: string]: string } = {};
 
-  isRecruiter: boolean = false;
-  isRegisterMode: boolean = false;
+  protected isRecruiter: boolean = false;
+  protected isRegisterMode: boolean = false;
+  protected isLoading: boolean = false;
 
-  constructor(private messageService: MessageService, private authService: AuthenticationService) { }
+  constructor(private messageService: MessageService, private authService: AuthenticationService, private router: Router) { }
 
   submit() {
 
-    console.log(this.errors)
-
     if (this.isFormValid()) {
 
-      this.authService.signIn({ email: this.email, password: this.password }).subscribe({
-        next: this.handleSuccessResponse,
-        error: this.handleErrorResponse,
-        complete: this.handleComplete
-      })
+      this.isLoading = true;
+
+      this.authService.signIn({ email: this.email, password: this.password })
+        .subscribe({
+          next: this.handleSuccessResponse,
+          error: this.handleErrorResponse,
+          complete: this.handleComplete
+        })
 
     } else {
       this.catchError();
     }
   }
 
-  private handleSuccessResponse = (response: ApiResponseLogin): void => {
-    // this.isLoading = false;
-    console.log(response.token);
-    this.showSuccess();
+  private handleSuccessResponse = (response: ApiLoginResponse): void => {
+    this.isLoading = false;
+    this.authService.saveToken(response.token);
   };
 
-  private handleErrorResponse = (error: any): void => {
-    console.log(error);
-    // this.isLoading = false;
+  private handleErrorResponse = (error: ApiErrorResponse): void => {
+    this.isLoading = false;
+    console.error(error.error.message);
+    this.showError(error.error.message);
   };
 
   private handleComplete = (): void => {
-    // if (!environment.production) {
-    console.log('Requisição concluída com sucesso!');
-    alert("logado com sucesso");
-    // }
+    this.router.navigate(['/dashboard']);
   }
 
   catchError() {
@@ -72,19 +72,14 @@ export class AuthenticationComponent {
     }
   }
 
-  showSuccess() {
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Success',
-      detail: 'Bem Vindo username'
-    });
-  }
-
   showError(detail: string) {
+    const message = detail === undefined ?
+      "Algo de errado aconteceu ! Tente novamente mais tarde" : detail;
+
     this.messageService.add({
       severity: 'error',
       summary: 'Error',
-      detail
+      detail: message
     });
   }
 
@@ -145,7 +140,6 @@ export class AuthenticationComponent {
     }
   }
 
-
   clearErrors() {
     this.errors = {};
   }
@@ -197,15 +191,3 @@ export class AuthenticationComponent {
     }
   }
 }
-
-/*
-
-{
-  "name": "Lucas",
-  "email": "lucas@dev.com",
-  "password": "8896",
-  "company": "imb",
-  "phone": "71999333511",
-  "role": "RECRUITER"
-}
-*/
