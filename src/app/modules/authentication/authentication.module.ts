@@ -22,7 +22,7 @@ import { InputSwitchModule } from 'primeng/inputswitch';
     ButtonModule,
     ToastModule,
     PasswordModule,
-    InputSwitchModule
+    InputSwitchModule,
   ],
   exports: [AuthenticationComponent]
 })
