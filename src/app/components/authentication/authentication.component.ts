@@ -4,14 +4,12 @@ import { MessageService } from 'primeng/api';
 import { ApiLoginResponse, ApiErrorResponse } from 'src/app/interfaces/ApiResponse';
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 
-import { environment } from 'src/environments/environment';
-
 @Component({
   selector: 'app-authentication',
   templateUrl: './authentication.component.html',
   styleUrls: ['./authentication.component.scss'],
 })
-export class AuthenticationComponent implements OnInit {
+export class AuthenticationComponent {
 
   protected name: string = '';
   protected email: string = '';
@@ -28,10 +26,6 @@ export class AuthenticationComponent implements OnInit {
     private authService: AuthenticationService,
     private router: Router
   ) { }
-
-  ngOnInit(): void {
-    console.log("prod ", environment.production);
-  }
 
   protected submit() {
     if (this.isFormValid()) {
