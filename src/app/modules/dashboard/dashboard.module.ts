@@ -3,8 +3,12 @@ import { CommonModule } from '@angular/common';
 import { DashboardComponent } from 'src/app/components/dashboard/dashboard.component';
 import { DashboardRoutingModule } from 'src/app/routes/dashboard-routing.module';
 
+import { FormsModule } from '@angular/forms';
+
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
 
 @NgModule({
   providers: [MessageService],
@@ -12,7 +16,10 @@ import { MessageService } from 'primeng/api';
   imports: [
     CommonModule,
     DashboardRoutingModule,
-    ToastModule
+    ToastModule,
+    FormsModule,
+    InputTextModule,
+    ButtonModule
   ],
   exports: [DashboardComponent]
 })
