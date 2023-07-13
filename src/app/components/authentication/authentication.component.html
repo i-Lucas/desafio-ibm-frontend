@@ -1,6 +1,5 @@
 <div class="w-screen h-screen bg-black-alpha-10">
     <div class="m-auto flex justify-content-center align-items-center w-full sm:w-6 h-screen">
-
         <div
             class="w-11 xl:w-5 surface-card py-6 shadow-2 border-round flex justify-content-center align-items-center flex-column gap-5">
 
@@ -10,14 +9,6 @@
                 <span (click)="toggleMode()" class="font-medium no-underline ml-2 text-blue-500 cursor-pointer">{{
                     getFormText().label2 }}</span>
             </div>
-
-            <!-- <div *ngIf="isRegisterMode">
-                <span class="p-float-label">
-                    <input pInputText id="username" [(ngModel)]="name"
-                        [ngClass]="{ 'ng-invalid ng-dirty': errors['name'] }" size="23%" />
-                    <label htmlFor="username">Nome</label>
-                </span>
-            </div> -->
 
             <span class="p-float-label">
                 <input pInputText id="email" [(ngModel)]="email" [ngClass]="{ 'ng-invalid ng-dirty': errors['email'] }"
@@ -37,30 +28,10 @@
                         [(ngModel)]="confirmPassword" [feedback]="false" [toggleMask]="true" />
                     <label htmlFor="password">Confirmar Senha</label>
                 </span>
-                <!-- <span class="flex mt-4 justify-content-start align-items-center">
-                    <p-inputSwitch [(ngModel)]="isRecruiter" />
-                    <span class="ml-3 text-600 font-medium line-height-3">Sou: {{ isRecruiter ? ' Recrutador' :
-                        'Candidato'}}</span>
-                </span> -->
-
-                <!-- <div *ngIf="isRecruiter">
-                    <span class="p-float-label mt-3">
-                        <input pInputText id="company" [(ngModel)]="company"
-                            [ngClass]="{ 'ng-invalid ng-dirty': errors['company'] }" size="23%" />
-                        <label htmlFor="company">Empresa</label>
-                    </span>
-                </div>
-
-                <span class="p-float-label mt-3">
-                    <input pInputText id="phone" [(ngModel)]="phone"
-                        [ngClass]="{ 'ng-invalid ng-dirty': errors['phone'] }" size="23%" />
-                    <label htmlFor="phone">Telefone</label>
-                </span> -->
             </div>
 
             <p-toast />
             <p-button label="{{ getFormText().btn }}" [loading]="isLoading" (click)="submit()" />
         </div>
-
     </div>
 </div>
