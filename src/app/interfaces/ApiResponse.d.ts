@@ -1,3 +1,5 @@
+import { Candidate } from "./candidate";
+
 export interface ApiLoginResponse {
     token: string;
 }
@@ -10,6 +12,7 @@ export interface ApiErrorResponse {
 }
 
 export interface UserDetailsResponse {
+    candidates: Candidate[],
     email: string;
 }
 
