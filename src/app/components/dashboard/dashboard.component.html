@@ -1,4 +1,44 @@
 <p-toast />
 <div *ngIf="authenticated">
-    <p>dashboard works!</p>
+
+    <div class="flex justify-content-start flex-column align-items-center pt-8">
+        <h2 class="text-6xl text-primary font-bold mb-3">Gerenciador de Candidatos</h2>
+        <div class="w-11 xl:w-9 h-auto surface-card py-6 shadow-2 border-round gap-5 mt-7">
+
+            <div class="flex justify-content-center align-items-center gap-4">
+                <span class="p-float-label">
+                    <input pInputText id="name" [(ngModel)]="newUser.name" />
+                    <label htmlFor="name">Nome</label>
+                </span>
+                <span class="p-float-label">
+                    <input pInputText id="email" [(ngModel)]="newUser.email" />
+                    <label htmlFor="email">Email</label>
+                </span>
+                <p-button label="Adicionar usuário" [disabled]="buttonAddNewCandidateIsDisabled()"
+                    [loading]="isLoadingButtonAddNewCandidate" (click)="addUser()" />
+            </div>
+
+        </div>
+        
+        <div *ngFor="let user of candidates">
+            <div class="w-screen h-auto flex justify-content-start flex-column align-items-center">
+                <div class="w-11 xl:w-9 h-auto surface-card py-6 shadow-2 border-round gap-5 mt-4 mb-4 flex">
+                    <div class="m-auto w-5">
+                        <h2 class="text-2xl text-gray-900 font-bold mb-3">Informações do candidato</h2>
+                        <h2 class="text-base text-gray-900 font-bold mb-3">Nome: {{ user.name }}</h2>
+                        <h2 class="text-base text-gray-900 font-bold mb-3">Email: {{ user.email }}</h2>
+                        <h2 class="text-base text-gray-900 font-bold mb-3">Status: {{ user.status }}</h2>
+                    </div>
+                    <div class="m-auto w-5 flex justify-content-between">
+                        <p-button (click)="schedule(user.id, user.status)"
+                            [disabled]="isScheduleButtonDisabled(user.status)">Marcar entrevista</p-button>
+                        <p-button (click)="approve(user.id, user.status)"
+                            [disabled]="isApproveButtonDisabled(user.status)">Aprovar</p-button>
+                        <p-button (click)="disqualify(user.id, user.status)"
+                            [disabled]="isDisqualifyButtonDisabled(user.status)">Desqualificar</p-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
